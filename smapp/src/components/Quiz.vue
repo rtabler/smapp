@@ -31,7 +31,7 @@ var quizResults = {
 
   USE_FB    : 0,
   USE_TWT   : 0,
-  
+
   ADDIC     : 0,
   ANXI      : 0,
   HOST      : 0,
@@ -160,6 +160,8 @@ var quizResults = {
       },
       _doMathForAnswer: function( questionIndex ) {
         // do the math for that bubbled answer
+        console.log(questionIndex);
+        console.log(this.currentAnswers);
         var mathOps = this.currentAnswers[questionIndex]["math"];
         for (var opI=0; opI<mathOps.length; opI++) {
           var op = mathOps[opI];
@@ -199,7 +201,7 @@ var quizResults = {
               // none selected, so do nothing
             } else {
               // does the math operation specified in the json
-              this._doMathForAnswer(i);
+              this._doMathForAnswer(this.chosenRadio);
             }
           } else {
             console.log("currentType is neither checkbox nor radio...")
