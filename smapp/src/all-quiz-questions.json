@@ -175,7 +175,7 @@
         ]
       },
       {"type": "radio",
-        "question": "",
+        "question": "Of all the sources (people, pages, organizations, communities, etc) that deliver your political or world news, which do you read the most from?",
         "answers": [
           {"disp":"sources that mostly align with my views", "math":[]},
           {"disp":"sources that most people would agree are \"neutral\"", "math":[]},
