@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1.0">
+    <link rel="stylesheet" type="text/css" href="universal.css" />
+    <title>LogOUT</title>
+  </head>
+  <body>
+    <a href="blah.html">BLAH</a>
+    <div id="top-bar">
+      <a class="main-header-link" href="index.html"><h1 class="main-header noselect">LogOUT</h1></a>
+      <h2 v-if="!quizActive" class="subtitle">
+        Do you know what social media doing to you?
+        <br>
+        Take this quiz to find out!
+      </h2>
+    </div>
+    <a class="big-button" href="index.html">BEGIN QUIZ</a>
+    <a href="./resources.html" class="resources-link">Browse all resources</a>
+  </body>
+  <style>
+#top-bar {
+  /*background-color: red;*/
+  /*height: 90px;*/
+}
+.big-button {
+  display: block;
+  box-sizing: border-box;
+  /*background-color: green;*/
+  margin: auto;
+  margin-top: 8px;
+  margin-bottom: 8px;
+  border-style: solid;
+  border-width: 1px;
+  border-radius: 10px;
+  padding: 10px;
+  color: black;
+  font-family: "Avenir";
+  text-decoration: none;
+  font-size: 16pt;
+  font-weight: bold;
+  width: 90%;
+}
+.resources-link {
+  display: block;
+  box-sizing: border-box;
+  background-color: green;
+  padding: 10px;
+  color: black;
+  font-family: "Avenir";
+  text-decoration: none;
+}
+.subtitle {
+  background-color: rgb(255,219,109);
+  color: black;
+  margin: 0px;
+  padding: 6px;
+  font-size: 12pt;
+}
+
+  </style>
+</html>
