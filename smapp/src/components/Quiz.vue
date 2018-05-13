@@ -2,19 +2,27 @@
   <div class="quiz">
     <!-- <question></question> -->
     <!-- <p>{{ questionsData[currentQuestionCategory] }}</p> -->
-    <form>
+    <form v-if="!quizFinished">
+      <div class="progress-bar">
+        <div class="progress-bar-bar" v-bind:style="{ width: (progress*100)+'%' }"></div>
+      </div>
       <p class="question-prompt">{{ currentQuestion }}</p>
       <div class="answers">
-        <div v-for="(answer,i) in currentAnswers" v-on:click="passSelect(i)">
+        <div v-for="(answer,i) in currentAnswers" v-on:click="passSelect(i)" class="answer noselect">
           <input v-if="isCheckbox(i)" type="checkbox" v-model="chosenCheckboxes[i]" v-bind:id="optionIdValue(i)" v-on:click="preventDefault">
           <input v-else type="radio" v-bind:value="i" v-model="chosenRadio" v-bind:id="optionIdValue(i)" v-on:click="preventDefault">
           {{ answer.disp }}
         </div>
       </div>
-      <br>
-      <button v-on:click="nextQuestion(false)" type="button">Skip Question</button>
-      <button v-on:click="nextQuestion(true)" type="button">Next Question</button>
+      <div class="noselect">
+        <button v-on:click="nextQuestion(false)" class="proceed-button noselect" type="button">Skip Question</button>
+        <button :disabled="nextQuestionDisabled()" v-on:click="nextQuestion(true)" class="proceed-button noselect" type="button">Next Question</button>
+      </div>
     </form>
+    <div v-if="quizFinished" class="results">
+      <h2>Results</h2>
+      <p id="results-text">This is where results would be. Sorry.</p>
+    </div>
   </div>
 </template>
 
@@ -31,7 +39,7 @@ var quizResults = {
 
   USE_FB    : 0,
   USE_TWT   : 0,
-  
+
   ADDIC     : 0,
   ANXI      : 0,
   HOST      : 0,
@@ -51,6 +59,8 @@ var quizResults = {
     // props: ['questionsData'],
     data: function() {
       return {
+        quizFinished: false,
+        overallQuestionIndex: 0,
         questionsData: questionsData,
         currentCategoryIndex: 0,
         currentQuestionIndex: 0,
@@ -59,6 +69,9 @@ var quizResults = {
       }
     },
     computed: {
+      progress: function() {
+        return this.overallQuestionIndex / 20.0;
+      },
       currentQuestionObject: function() {
         return this.questionsData[Object.keys(this.questionsData)[this.currentCategoryIndex]][this.currentQuestionIndex];
       },
@@ -75,41 +88,22 @@ var quizResults = {
     },
     methods: {
       passSelect: function(i) {
-        return;
-        // console.log("passSelect");
-        // var dumsum = 1.1;
-        // for (var dumb=0; dumb<1000000; dumb++) {
-          // dumsum = Math.pow(dumsum,dumsum);
-        // }
-        // console.log(dumsum);
-        var inp = document.getElementById(this.optionIdValue(i));
-        console.log(inp.checked);
-        var currentTime = new Date().getTime();
-        while (currentTime + 3000 >= new Date().getTime()) {
-          if (inp.checked == false) {
-            console.log("aha!");
-          }
-        }
+        if ( this.currentType == "checkbox" ) {
+          this.chosenCheckboxes[i] = !this.chosenCheckboxes[i];
+          this.$forceUpdate();
+        } else if ( this.currentType == "radio" ) {
+          this.chosenRadio = i;
 
-
-        if ( inp.type=="checkbox" ) {
-          console.log("trying to pass select");
-          console.log(inp);
-          console.log(inp.checked);
-          inp.checked = !inp.checked;
-          console.log(inp.checked);
-        } else if ( inp.type=="radio" ) {
-          inp.checked = true;
         } else {
-          console.log("<input> is neither checkbox nor radio. This should not happen.");
+
         }
       },
       preventDefault: function(e) {
         // console.log("didn't prevent default");
         return;
         var inp = document.getElementById(this.optionIdValue(0));
-        console.log(inp.checked);
-        console.log("preventing default");
+        // console.log(inp.checked);
+        // console.log("preventing default");
         e.preventDefault();
       },
       isCheckbox: function(i) {
@@ -118,11 +112,18 @@ var quizResults = {
       optionIdValue: function(i) {
         return "option-"+i;
       },
+      _finishQuiz: function(i) {
+        this.quizFinished = true;
+        this.currentCategoryIndex = 0;
+        this.currentQuestionIndex = 0;
+
+      },
       _incrementQuestion: function() {
         // console.log("In incrementquestion");
         // Do the model logic of moving to the next question
 
         // Increment the question index
+        this.overallQuestionIndex += 1;
         this.currentQuestionIndex += 1;
         // Check if the quiz needs to move to the next section
         if (this.currentQuestionIndex >= this.questionsData[Object.keys(this.questionsData)[this.currentCategoryIndex]].length) {
@@ -130,10 +131,9 @@ var quizResults = {
           this.currentQuestionIndex = 0;
           // Check to see if the quiz is over
           if (this.currentCategoryIndex >= Object.keys(this.questionsData).length) {
-            alert("end of quiz");
+            // alert("end of quiz");
             // restarting for now...
-            this.currentCategoryIndex = 0;
-            this.currentQuestionIndex = 0;
+            this._finishQuiz();
             return;
           }
         }
@@ -142,7 +142,7 @@ var quizResults = {
       },
       _clearAnswersData: function() {
         // Clear the selection data
-        console.log(this.currentType);
+        // console.log(this.currentType);
         if ( this.currentType == "checkbox" ) {
           this.chosenCheckboxes = [];
           var a = 0;
@@ -159,7 +159,10 @@ var quizResults = {
         // console.log(this.chosenRadio);
       },
       _doMathForAnswer: function( questionIndex ) {
+        // console.log("DoMathOpen");
         // do the math for that bubbled answer
+        // console.log(questionIndex);
+        // console.log(this.currentAnswers);
         var mathOps = this.currentAnswers[questionIndex]["math"];
         for (var opI=0; opI<mathOps.length; opI++) {
           var op = mathOps[opI];
@@ -174,19 +177,22 @@ var quizResults = {
           }
 
           // apply the math to the main data storage
-          console.log(op);
-          console.log(factorToAdd);
           quizResults[op] += factorToAdd;
-          console.log(quizResults);
         }
+        // console.log("DoMathClose");
+      },
+      nextQuestionDisabled: function() {
+        return ( this.currentType == "radio"
+          && this.chosenRadio < 0 );
       },
       nextQuestion: function( countAnswers ) {
+        // console.log("NEXT");
         // Grade / record this question's answers
         //    (unless countAnswers is false)
         if (countAnswers) {
 
           if ( this.currentType == "checkbox" ) {
-            console.log(this.chosenCheckboxes);
+            // console.log(this.chosenCheckboxes);
             // iterate through the available answers
             for (var i=0; i<this.currentAnswers.length; i++) {
               if ( this.chosenCheckboxes[i] == true ) {
@@ -199,7 +205,7 @@ var quizResults = {
               // none selected, so do nothing
             } else {
               // does the math operation specified in the json
-              this._doMathForAnswer(i);
+              this._doMathForAnswer(this.chosenRadio);
             }
           } else {
             console.log("currentType is neither checkbox nor radio...")
@@ -214,21 +220,36 @@ var quizResults = {
 </script>
 
 <style scoped>
-button {
-  background-color: white;
-  margin: 6px;
-  border-width: 0px;
-  border-radius: 0;
-  padding: 10px;
+
+.proceed-button {
+  margin-left: 6px;
+  margin-right: 6px;
+  margin-top: 16px;
+  margin-bottom: 16px;
   font-size: 10pt;
 }
 .quiz {
-  padding: 16px;
+  /*padding: 8px;*/
+  /*background-color: blue;*/
 }
 .question-prompt {
+  /*margin: 0;*/
   font-weight: bold;
 }
 .answers {
   text-align: left;
+}
+.results {
+  margin: 16px;
+  font-size: 12pt;
+  text-align: left;
+  /*margin-bottom: 200px;*/
+}
+.results h2 {
+  font-size: 16pt;
+}
+.results p {
+  /*background-color: red;*/
+  /*margin-bottom: 100px;*/
 }
 </style>
