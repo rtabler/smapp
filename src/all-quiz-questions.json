@@ -162,7 +162,7 @@
           {"disp":"I try to be as polite as possible", "math":["HOST*0.0"]},
           {"disp":"I try to be straightforward and objective", "math":["HOST*0.0"]},
           {"disp":"I try to be scolding", "math":["HOST*2.0"]},
-          {"disp":"I try to be witty and dish it back at them", "math":["HOST*3.0"]}
+          {"disp":"I try to be witty and dish it back at them", "math":["HOST*2.5"]}
         ]
       }
     ],

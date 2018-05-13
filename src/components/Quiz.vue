@@ -21,7 +21,8 @@
     </form>
     <div v-if="quizFinished" class="results">
       <h2>Results</h2>
-      <p id="results-text">This is where results would be. Sorry.</p>
+      <div class="results-html" v-html="resultsHtml">
+      </div>
     </div>
   </div>
 </template>
@@ -34,17 +35,18 @@ import Answers from './Answers'
 import allQuestionData from '../all-quiz-questions.json';
 var questionsData = allQuestionData["allQuestions"];
 var quizResults = {
-  WHY_BAD   : 0,
-  WHY_GOOD  : 0,
+  WHY_BAD   : 0.0,
+  WHY_GOOD  : 0.0,
 
-  USE_FB    : 0,
-  USE_TWT   : 0,
+  USE_FB    : 0.0,
+  USE_TWT   : 0.0,
 
-  ADDIC     : 0,
-  ANXI      : 0,
-  HOST      : 0,
-  MISINF    : 0
+  ADDIC     : 0.0,
+  ANXI      : 0.0,
+  HOST      : 0.0,
+  MISINF    : 0.0
 };
+var resultsHtmlData = "adsfsad";
 // var currentCategoryIndex = 0;
 // var currentQuestionIndex = 0;
 // console.log(questionsData);
@@ -84,6 +86,9 @@ var quizResults = {
       currentAnswers: function() {
         // console.log(this.currentQuestionObject["answers"])
         return this.currentQuestionObject["answers"];
+      },
+      resultsHtml: function() {
+        return resultsHtmlData;
       }
     },
     methods: {
@@ -113,6 +118,72 @@ var quizResults = {
         return "option-"+i;
       },
       _finishQuiz: function(i) {
+        resultsHtmlData = "";
+
+        if ( quizResults["WHY_BAD"] <= quizResults["WHY_GOOD"] ) {
+          resultsHtmlData += "<p>You seem to mostly benefit from the social media sites that you use. Keep it up! You might find useful tools here anyway:</p>";
+        } else if ( quizResults["WHY_BAD"] > quizResults["WHY_GOOD"] ) {
+          resultsHtmlData += "<p>The social media you use seems to be doing more harm than good. We recommend addressing that — check out some of the resources below!</p>";
+        }
+
+        console.log(resultsHtmlData);
+
+        // quizResults["WHY_BAD"]
+
+        // normalize for number of questions asked
+        quizResults["ADDIC"] = quizResults["ADDIC"] / 5.0;
+        quizResults["ANXI"] = quizResults["ANXI"] / 5.0;
+        quizResults["HOST"] = quizResults["HOST"] / 5.0;
+        quizResults["MISINF"] = quizResults["MISINF"] / 4.0;
+
+        var traits = ["ADDIC","ANXI","HOST","MISINF"];
+        var traitsTemp = ["ADDIC","ANXI","HOST","MISINF"];
+        var orderedTraits = [];
+        while ( traitsTemp.length > 0 ) {
+          var maxVal = 0.0;
+          var maxTrait = traitsTemp[0];
+          for ( var i=0; i<traitsTemp.length; i++ ) {
+            if ( quizResults[traitsTemp[i]] > maxVal ) {
+              maxTrait = traitsTemp[i];
+              maxVal = quizResults[maxTrait];
+            }
+          }
+          orderedTraits.push(maxTrait);
+          traitsTemp.splice(traitsTemp.indexOf(maxTrait),1);
+        }
+
+        console.log(orderedTraits);
+        console.log(quizResults);
+
+        for ( var i=0; i<orderedTraits.length; i++ ) {
+          var thisTrait = orderedTraits[i];
+
+          if ( thisTrait == "ADDIC" && quizResults[thisTrait] > 0.3 ) {
+
+          } else if ( thisTrait == "ANXI" && quizResults[thisTrait] > 0.3 ) {
+            if ( quizResults["USE_FB"] > 0.0 ) {
+              // fb demetricator
+              resultsHtmlData += "<p><a href=\"https://bengrosser.com/projects/facebook-demetricator/\">Facebook Demetricator</a></p>";
+              // social fixer
+              resultsHtmlData += "<p><a href=\"http://socialfixer.com/\">Social Fixer</a></p>";
+              // f.b. purity
+              resultsHtmlData += "<p><a href=\"https://www.fbpurity.com/images/fbpurity.jpg\">F.B. Purity</a></p>";
+            }
+            if ( quizResults["USE_TWT"] > 0.0 ) {
+              // twitter demetricator
+              resultsHtmlData += "<p><a href=\"\">https://bengrosser.com/projects/twitter-demetricator/</a></p>";
+            }
+          } else if ( thisTrait == "HOST" && quizResults[thisTrait] > 0.3 ) {
+
+          } else if ( thisTrait == "MISINF" && quizResults[thisTrait] > 0.3 ) {
+
+          }
+        }
+
+
+        resultsHtmlData += "<p><strong><a href=\"resources.html\">See all social media resources</a></strong></p>"
+
+
         this.quizFinished = true;
         this.currentCategoryIndex = 0;
         this.currentQuestionIndex = 0;
@@ -220,7 +291,9 @@ var quizResults = {
 </script>
 
 <style scoped>
-
+h2 {
+  margin-top: 10px;
+}
 .proceed-button {
   margin-left: 6px;
   margin-right: 6px;
@@ -229,8 +302,9 @@ var quizResults = {
   font-size: 10pt;
 }
 .quiz {
-  /*padding: 8px;*/
-  /*background-color: blue;*/
+  padding-top: 0.1px;
+  padding-bottom: 8px;
+  background-color: white;
 }
 .question-prompt {
   /*margin: 0;*/
