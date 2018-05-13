@@ -1,7 +1,7 @@
 <template>
   <div id="app">
     <div id="top-bar">
-      <h1 class="noselect">Social Media Something</h1>
+      <h1 class="main-header noselect">LogOUT</h1>
       <h2 v-if="!quizActive" class="subtitle">
         Do you know what social media doing to you?
         <br>
@@ -30,7 +30,7 @@ export default {
   },
   data: function() {
     return {
-      quizActive: false
+      quizActive: true
     };
   },
   computed: {
@@ -53,6 +53,10 @@ export default {
   color: #2c3e50;
   /*background-color: ;*/
   /*margin-top: 60px;*/
+}
+.main-header {
+  font-family: Helvetica;
+  font-weight: bold;
 }
 #top-bar {
   /*background-color: red;*/
