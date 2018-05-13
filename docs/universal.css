@@ -13,7 +13,8 @@ h2 {
 }
 
 body {
-  background-color: white;
+  background-color: rgb(59,89,152);
+  /*background-color: white;*/
   margin: 0;
   padding: 0;
   font-family: 'Avenir', Helvetica, Arial, sans-serif;
@@ -21,8 +22,9 @@ body {
   -moz-osx-font-smoothing: grayscale;
   text-align: center;
   color: #2c3e50;
-  /*background-color: ;*/
-  /*margin-top: 60px;*/
+}
+.white-bg {
+  background-color: white;
 }
 p {
   font-family: Helvetica, Arial, sans-serif;
@@ -67,6 +69,7 @@ button {
   color: white;
   box-sizing: border-box;
   padding: 8px;
+  padding-bottom: 20px;
 }
 /* https://simplesharingbuttons.com/#code */
 ul.share-buttons{
