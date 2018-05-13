@@ -307,8 +307,10 @@ h2 {
   background-color: white;
 }
 .question-prompt {
-  /*margin: 0;*/
+  margin-left: 16px;
+  margin-right: 16px;
   font-weight: bold;
+  text-align: left;
 }
 .answers {
   text-align: left;
