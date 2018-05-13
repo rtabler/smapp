@@ -1,7 +1,7 @@
 <template>
   <div id="app">
     <div id="top-bar">
-      <h1 class="main-header noselect">LogOUT</h1>
+      <a class="main-header-link" href="index.html"><h1 class="main-header noselect">LogOUT</h1></a>
       <h2 v-if="!quizActive" class="subtitle">
         Do you know what social media doing to you?
         <br>
@@ -11,7 +11,6 @@
     <button class="big-button" v-if="!quizActive" v-on:click="beginQuiz()">BEGIN QUIZ</button>
     <quiz v-if="quizActive"></quiz>
 
-    <!-- <a href="./resources.html" class="resources-link">Browse all resources</a> -->
     <div class="share-footer">
       <p>Share this site to help a friend!</p>
       <ul class="share-buttons">
@@ -107,6 +106,13 @@ export default {
 
 
 /* copied from universal.css */
+.main-header-link {
+  text-decoration: none;
+}
+.main-header {
+  font-family: Helvetica;
+  font-weight: bold;
+}
 .resources-pre {
   text-align: left;
   margin: 16px;
