@@ -1,4 +1,5 @@
 <template>
+  <link rel="stylesheet" type="text/css" href="universal.css">
   <div id="app">
     <div id="top-bar">
       <h1 class="main-header noselect">LogOUT</h1>
